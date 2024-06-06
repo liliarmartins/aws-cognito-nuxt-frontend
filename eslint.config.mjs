@@ -17,6 +17,5 @@ export default withNuxt({
     'vue/no-v-html': 'off',
     'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
     'no-undef': 'off',
-    'vue/html-self-closing': 'off', // prettier conflict
   },
 }).prepend(eslintPluginPrettierRecommended)

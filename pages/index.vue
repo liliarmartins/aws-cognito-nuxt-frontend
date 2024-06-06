@@ -1,7 +1,10 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div>Page: index</div>
+  <div>
+    <div>Page: index</div>
+    <div>Test</div>
+  </div>
 </template>
 
 <style scoped></style>
