@@ -1,7 +1,4 @@
-<script lang="ts" setup>
-const test = 'test'
-console.log(test)
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <div>Page: index</div>
