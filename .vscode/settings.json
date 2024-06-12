@@ -1,0 +1,7 @@
+{
+  "editor.tabSize": 2,
+  "eslint.experimental.useFlatConfig": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
