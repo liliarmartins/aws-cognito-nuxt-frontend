@@ -3,7 +3,6 @@ const toastStore = useToastStore()
 watch(
   () => toastStore.isVisible,
   () => {
-    console.log(toastStore.isVisible)
     if (toastStore.isVisible) {
       setTimeout(() => toastStore.hideToast(), toastStore.toastDuration)
     }
