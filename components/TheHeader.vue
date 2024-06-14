@@ -1,15 +1,13 @@
 <script setup>
 const user = ref(null)
-const getUser = async () => {
-  const userAttributes = await useNuxtApp().$Amplify.Auth.fetchUserAttributes()
-  console.log(userAttributes)
-  user.value = {
-    name: userAttributes.name,
-    email: userAttributes.email,
-    nickname: userAttributes.nickname,
-  }
-}
-getUser()
+const userStore = useUserStore()
+watch(
+  () => userStore.getUser(),
+  () => {
+    user.value = userStore.getUser()
+  },
+  { immediate: true },
+)
 
 const logout = async () => {
   await useNuxtApp().$Amplify.Auth.signOut()

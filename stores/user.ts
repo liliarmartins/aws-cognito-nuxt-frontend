@@ -1,15 +1,10 @@
 import { skipHydrate } from 'pinia'
-
-type User = {
-  email: string
-  name: string
-  nickname: string
-}
+import { type FetchUserAttributesOutput } from 'aws-amplify/auth'
 
 export const useUserStore = defineStore('user', () => {
   const userStore = useLocalStorage('user', null as string | null)
 
-  const setUser = (newUser: User | null) => {
+  const setUser = (newUser: FetchUserAttributesOutput | null) => {
     if (!newUser) {
       userStore.value = null
       return

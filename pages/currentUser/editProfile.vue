@@ -1,13 +1,8 @@
 <script lang="ts" setup>
-import { type FetchUserAttributesOutput } from 'aws-amplify/auth'
-
 const success = ref(false)
 const isLoading = ref(false)
-const user = ref<FetchUserAttributesOutput | null>(null)
-const getUser = async () => {
-  user.value = await useNuxtApp().$Amplify.Auth.fetchUserAttributes()
-}
-getUser()
+const userStore = useUserStore()
+const user = userStore.getUser()
 
 const save = async (name: string, nickname: string) => {
   isLoading.value = true
@@ -18,8 +13,6 @@ const save = async (name: string, nickname: string) => {
     },
   })
 
-  console.log(updateOutput)
-
   if (!updateOutput.name.isUpdated) {
     throw createError({
       statusCode: 500,
@@ -28,6 +21,7 @@ const save = async (name: string, nickname: string) => {
     })
   }
 
+  useUpdateUserStore()
   isLoading.value = false
   success.value = true
   setTimeout(() => navigateTo('/'), 1000)
@@ -47,6 +41,7 @@ const save = async (name: string, nickname: string) => {
               @save="save"
               @cancel="() => navigateTo('/')"
             />
+            <LoadingSpinner v-if="isLoading" />
           </div>
         </div>
       </div>
@@ -58,3 +53,5 @@ const save = async (name: string, nickname: string) => {
     />
   </div>
 </template>
+
+<style scoped></style>

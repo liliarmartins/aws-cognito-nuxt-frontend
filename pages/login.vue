@@ -11,7 +11,10 @@ const auth = useAuthenticator()
 watch(
   () => auth.user,
   (newUser) => {
-    if (newUser) navigateTo('/')
+    if (newUser) {
+      useUpdateUserStore()
+      navigateTo('/')
+    }
   },
 )
 </script>
