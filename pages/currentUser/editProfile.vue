@@ -1,21 +1,17 @@
 <script lang="ts" setup>
-import {
-  fetchUserAttributes,
-  updateUserAttributes,
-  type FetchUserAttributesOutput,
-} from 'aws-amplify/auth'
+import { type FetchUserAttributesOutput } from 'aws-amplify/auth'
 
 const success = ref(false)
 const isLoading = ref(false)
 const user = ref<FetchUserAttributesOutput | null>(null)
 const getUser = async () => {
-  user.value = await fetchUserAttributes()
+  user.value = await useNuxtApp().$Amplify.Auth.fetchUserAttributes()
 }
 getUser()
 
 const save = async (name: string, nickname: string) => {
   isLoading.value = true
-  const updateOutput = await updateUserAttributes({
+  const updateOutput = await useNuxtApp().$Amplify.Auth.updateUserAttributes({
     userAttributes: {
       name,
       nickname,

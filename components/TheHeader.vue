@@ -1,9 +1,7 @@
 <script setup>
-import { signOut, fetchUserAttributes } from 'aws-amplify/auth'
-
 const user = ref(null)
 const getUser = async () => {
-  const userAttributes = await fetchUserAttributes()
+  const userAttributes = await useNuxtApp().$Amplify.Auth.fetchUserAttributes()
   console.log(userAttributes)
   user.value = {
     name: userAttributes.name,
@@ -14,7 +12,7 @@ const getUser = async () => {
 getUser()
 
 const logout = async () => {
-  await signOut()
+  await useNuxtApp().$Amplify.Auth.signOut()
   navigateTo('/login')
 }
 
