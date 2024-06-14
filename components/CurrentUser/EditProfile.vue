@@ -63,11 +63,11 @@ const save = () => {
       </div>
       <div class="field is-grouped mt-5">
         <div class="control">
-          <button class="button is-link" @click="save">Save</button>
+          <button class="button is-info" @click="save">Save</button>
         </div>
         <div class="control">
           <button
-            class="button is-link is-light"
+            class="button is-info is-light"
             @click="() => $emit('cancel')"
           >
             Cancel

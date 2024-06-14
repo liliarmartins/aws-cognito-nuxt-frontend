@@ -22,7 +22,7 @@ watch(
     if (props.isVisible && props.isSuccess) {
       setTimeout(() => {
         emits('update:isVisible', false)
-      }, 2500)
+      }, 1500)
     }
   },
 )
