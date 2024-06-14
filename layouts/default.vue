@@ -3,6 +3,7 @@
 <template>
   <div>
     <TheHeader />
+    <ToastModal />
     <section class="section">
       <slot />
     </section>

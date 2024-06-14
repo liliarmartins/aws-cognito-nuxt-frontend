@@ -1,65 +1,31 @@
 <script lang="ts" setup>
-const props = defineProps({
-  message: {
-    type: String,
-    default: 'Success',
-  },
-  isSuccess: {
-    type: Boolean,
-    default: true,
-  },
-  isVisible: {
-    type: Boolean,
-    default: false,
-  },
-})
-
-const emits = defineEmits(['update:isVisible'])
-
+const toastStore = useToastStore()
 watch(
-  () => props.isVisible,
+  () => toastStore.isVisible,
   () => {
-    if (props.isVisible && props.isSuccess) {
-      setTimeout(() => {
-        emits('update:isVisible', false)
-      }, 1500)
+    console.log(toastStore.isVisible)
+    if (toastStore.isVisible) {
+      setTimeout(() => toastStore.hideToast(), toastStore.toastDuration)
     }
   },
 )
 </script>
 
 <template>
-  <div class="modal" :class="{ 'is-active': props.isVisible }">
-    <div
-      class="modal-background"
-      @click="$emit('update:isVisible', false)"
-    ></div>
-    <div class="modal-content">
-      <article
-        class="message"
-        :class="{
-          'is-success': props.isSuccess,
-          'is-danger': !props.isSuccess,
-        }"
-      >
-        <div class="message-header">
-          <p>{{ props.isSuccess ? 'Success' : 'Error' }}</p>
-          <button
-            class="delete"
-            aria-label="delete"
-            @click="$emit('update:isVisible', false)"
-          ></button>
-        </div>
-        <div class="message-body">
-          {{ props.message }}
-        </div>
-      </article>
-    </div>
+  <div
+    v-if="toastStore.isVisible"
+    :class="['notification', toastStore.toastType]"
+  >
+    {{ toastStore.toastMessage }}
+    <button class="delete" @click="toastStore.hideToast()"></button>
   </div>
 </template>
 
 <style scoped>
-.modal-content {
-  width: 400px;
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
 }
 </style>

@@ -1,37 +1,35 @@
 <script lang="ts" setup>
-const success = ref(false)
 const isLoading = ref(false)
 const userStore = useUserStore()
 const user = userStore.getUser()
+const toastStore = useToastStore()
+const { showToast } = toastStore
 
 const save = async (name: string, nickname: string) => {
   isLoading.value = true
-  const updateOutput = await useNuxtApp().$Amplify.Auth.updateUserAttributes({
-    userAttributes: {
-      name,
-      nickname,
-    },
-  })
-
-  if (!updateOutput.name.isUpdated) {
-    throw createError({
-      statusCode: 500,
-      message: 'Could not update current user profile',
-      fatal: true,
+  try {
+    await useNuxtApp().$Amplify.Auth.updateUserAttributes({
+      userAttributes: {
+        name,
+        nickname,
+      },
     })
-  }
 
-  useUpdateUserStore()
-  isLoading.value = false
-  success.value = true
-  setTimeout(() => navigateTo('/'), 1000)
+    useUpdateUserStore()
+    showToast('Profile updated successfully!', 'is-success')
+  } catch (error) {
+    showToast('Failed to update profile', 'is-danger')
+  } finally {
+    isLoading.value = false
+    navigateTo('/')
+  }
 }
 </script>
 
 <template>
   <div v-if="user">
     <div class="container">
-      <div v-if="!success" class="box">
+      <div class="box">
         <div class="columns">
           <div class="column is-5-tablet is-6-desktop is-6-widescreen">
             <h4 class="title is-4">Edit Profile</h4>
@@ -46,11 +44,6 @@ const save = async (name: string, nickname: string) => {
         </div>
       </div>
     </div>
-    <ToastModal
-      v-model:is-visible="success"
-      message="User profile updated!"
-      :is-success="true"
-    />
   </div>
 </template>
 
