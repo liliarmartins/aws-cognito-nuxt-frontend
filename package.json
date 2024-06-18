@@ -12,15 +12,20 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@aws-amplify/ui-vue": "^4.2.8",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@nuxt/eslint": "^0.3.13",
+    "@pinia/nuxt": "^0.5.1",
+    "@vueuse/core": "^10.11.0",
+    "@vueuse/nuxt": "^10.11.0",
     "aws-amplify": "^6.3.6",
     "bulma": "^1.0.1",
     "nuxt": "^3.11.2",
+    "pinia": "^2.1.7",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"
   },
