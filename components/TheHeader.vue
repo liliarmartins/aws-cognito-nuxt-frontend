@@ -99,19 +99,6 @@ const hideAll = () => {
                 <span>Edit Profile</span>
               </span>
             </NuxtLink>
-            <NuxtLink
-              class="navbar-item"
-              to="/currentUser/editPassword"
-              @click="hideAll"
-            >
-              <span class="icon-text">
-                <span class="icon">
-                  <font-awesome-icon :icon="['fas', 'key']" />
-                </span>
-                <span>Edit Password</span>
-              </span>
-            </NuxtLink>
-
             <a class="navbar-item" @click="logout()">
               <span class="icon-text">
                 <span class="icon">
