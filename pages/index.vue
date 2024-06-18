@@ -2,11 +2,7 @@
 
 <template>
   <div class="container is-fluid">
-    <div class="has-text-centered">Page: index</div>
-    <div>
-      <span><font-awesome-icon :icon="['fas', 'upload']" /></span>
-    </div>
-    <div>Test</div>
+    <h4 class="title is-4">Welcome Home</h4>
   </div>
 </template>
 

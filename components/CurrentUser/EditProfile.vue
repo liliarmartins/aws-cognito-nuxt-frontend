@@ -30,7 +30,7 @@ const save = () => {
 
 <template>
   <div>
-    <form id="form" @submit.prevent>
+    <div>
       <div class="field">
         <label class="label">Name</label>
         <div class="control">
@@ -74,6 +74,6 @@ const save = () => {
           </button>
         </div>
       </div>
-    </form>
+    </div>
   </div>
 </template>
