@@ -1,4 +1,4 @@
-// https://docs.amplify.aws/gen1/javascript/build-a-backend/server-side-rendering/nuxt/
+// https://docs.amplify.aws/vue/build-a-backend/server-side-rendering/
 import { Amplify } from 'aws-amplify'
 import {
   fetchUserAttributes,

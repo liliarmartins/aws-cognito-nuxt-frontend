@@ -6,16 +6,23 @@ definePageMeta({
   layout: false,
 })
 
+const { query } = useRoute()
 const auth = useAuthenticator()
 
 watch(
   () => auth.user,
-  (newUser) => {
+  async (newUser) => {
     if (newUser) {
       useUpdateUserStore()
-      navigateTo('/')
+      const redirectTo = Array.isArray(query.redirectTo)
+        ? query.redirectTo[0]
+        : query.redirectTo
+      await navigateTo(redirectTo, {
+        replace: true,
+      })
     }
   },
+  { immediate: true },
 )
 </script>
 
