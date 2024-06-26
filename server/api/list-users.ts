@@ -5,9 +5,8 @@ import {
 import { parseAmplifyConfig } from 'aws-amplify/utils'
 import outputs from '~/amplify_outputs.json'
 
-const amplifyConfig = parseAmplifyConfig(outputs)
-
 export default defineEventHandler(async () => {
+  const amplifyConfig = parseAmplifyConfig(outputs)
   const listUsers = () => {
     const client = new CognitoIdentityProviderClient({})
 
