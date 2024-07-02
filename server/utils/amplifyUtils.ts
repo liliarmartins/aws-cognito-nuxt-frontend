@@ -1,14 +1,18 @@
 import type { H3Event, EventHandlerRequest } from 'h3'
 import type { AmplifyServer, CookieStorage } from 'aws-amplify/adapter-core'
+import type { LibraryOptions } from '@aws-amplify/core'
 import {
   createKeyValueStorageFromCookieStorageAdapter,
   createUserPoolsTokenProvider,
   createAWSCredentialsAndIdentityIdProvider,
   runWithAmplifyServerContext,
 } from 'aws-amplify/adapter-core'
+import { getCurrentUser } from 'aws-amplify/auth/server'
+import {
+  AdminListGroupsForUserCommand,
+  CognitoIdentityProviderClient,
+} from '@aws-sdk/client-cognito-identity-provider'
 import { parseAmplifyConfig } from 'aws-amplify/utils'
-
-import type { LibraryOptions } from '@aws-amplify/core'
 import outputs from '~/amplify_outputs.json'
 
 const amplifyConfig = parseAmplifyConfig(outputs)
@@ -74,4 +78,33 @@ export const runAmplifyApi = <Result>(
     createLibraryOptions(event),
     operation,
   )
+}
+
+export const getUser = async (event: H3Event<EventHandlerRequest>) => {
+  return await runAmplifyApi(event, (contextSpec: AmplifyServer.ContextSpec) =>
+    getCurrentUser(contextSpec),
+  )
+}
+
+export const getGroupsForUser = async (
+  event: H3Event<EventHandlerRequest>,
+): Promise<Array<string | undefined>> => {
+  const client = new CognitoIdentityProviderClient({})
+
+  const user = await getUser(event)
+
+  const command = new AdminListGroupsForUserCommand({
+    Username: user.username,
+    UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
+  })
+
+  const data = await client.send(command)
+  return data.Groups?.map((group) => group.GroupName) ?? []
+}
+
+export const checkIfUserAdminUser = async (
+  event: H3Event<EventHandlerRequest>,
+): Promise<boolean> => {
+  const groups = await getGroupsForUser(event)
+  return groups.includes('SUPER_ADMIN') || groups.includes('USER_ADMIN')
 }

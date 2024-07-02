@@ -5,8 +5,16 @@ import {
 import { parseAmplifyConfig } from 'aws-amplify/utils'
 import outputs from '~/amplify_outputs.json'
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   const amplifyConfig = parseAmplifyConfig(outputs)
+
+  if (!(await checkIfUserAdminUser(event))) {
+    setResponseStatus(event, 403)
+    return {
+      error: 'Access denied: You should be a User Admin to list users',
+    }
+  }
+
   const listUsers = () => {
     const client = new CognitoIdentityProviderClient({})
 
