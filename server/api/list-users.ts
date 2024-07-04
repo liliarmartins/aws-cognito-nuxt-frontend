@@ -42,5 +42,12 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  return await listUsers()
+  const users = await listUsers()
+
+  const isActive = getQuery(event).isActive === 'true'
+  if (isActive) {
+    return users.filter((user) => user.Enabled)
+  }
+
+  return users
 })
