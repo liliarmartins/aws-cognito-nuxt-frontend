@@ -1,3 +1,4 @@
+import type { ListUsersCommandOutput } from '@aws-sdk/client-cognito-identity-provider'
 import {
   ListUsersCommand,
   CognitoIdentityProviderClient,
@@ -5,9 +6,35 @@ import {
 import { parseAmplifyConfig } from 'aws-amplify/utils'
 import outputs from '~/amplify_outputs.json'
 
-export default defineEventHandler(async (event) => {
-  const amplifyConfig = parseAmplifyConfig(outputs)
+const amplifyConfig = parseAmplifyConfig(outputs)
 
+const getUsersWithGroups = async (data: ListUsersCommandOutput) => {
+  return await Promise.all(
+    data.Users!.map(async (user) => {
+      const formattedUser = formatUserAttributes(user)
+      const groups: string[] = user.Username
+        ? await getGroupsForUser(user.Username)
+        : []
+
+      return {
+        ...formattedUser,
+        Groups: groups,
+      }
+    }),
+  )
+}
+
+const listUsers = async () => {
+  const client = new CognitoIdentityProviderClient({})
+  const command = new ListUsersCommand({
+    UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
+  })
+  const data = await client.send(command)
+
+  return await getUsersWithGroups(data)
+}
+
+export default defineEventHandler(async (event) => {
   if (!(await checkIfUserAdminUser(event))) {
     setResponseStatus(event, 403)
     return {
@@ -15,15 +42,5 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const listUsers = () => {
-    const client = new CognitoIdentityProviderClient({})
-
-    const command = new ListUsersCommand({
-      UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
-    })
-
-    return client.send(command)
-  }
-
-  return listUsers()
+  return await listUsers()
 })

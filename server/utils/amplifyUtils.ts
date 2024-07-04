@@ -1,6 +1,7 @@
 import type { H3Event, EventHandlerRequest } from 'h3'
 import type { AmplifyServer, CookieStorage } from 'aws-amplify/adapter-core'
 import type { LibraryOptions } from '@aws-amplify/core'
+import type { UserType } from '@aws-sdk/client-cognito-identity-provider'
 import {
   createKeyValueStorageFromCookieStorageAdapter,
   createUserPoolsTokenProvider,
@@ -86,25 +87,57 @@ export const getUser = async (event: H3Event<EventHandlerRequest>) => {
   )
 }
 
-export const getGroupsForUser = async (
-  event: H3Event<EventHandlerRequest>,
-): Promise<Array<string | undefined>> => {
+export const getGroupsForUser = async (username: string): Promise<string[]> => {
   const client = new CognitoIdentityProviderClient({})
-
-  const user = await getUser(event)
-
   const command = new AdminListGroupsForUserCommand({
-    Username: user.username,
+    Username: username,
     UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
   })
-
   const data = await client.send(command)
-  return data.Groups?.map((group) => group.GroupName) ?? []
+
+  if (!data.Groups) return []
+
+  return data.Groups.map((group) => group.GroupName).filter(
+    (name): name is string => !!name,
+  )
+}
+
+export const getGroupsForCurrentUser = async (
+  event: H3Event<EventHandlerRequest>,
+): Promise<Array<string | undefined>> => {
+  const user = await getUser(event)
+
+  return getGroupsForUser(user.username)
 }
 
 export const checkIfUserAdminUser = async (
   event: H3Event<EventHandlerRequest>,
 ): Promise<boolean> => {
-  const groups = await getGroupsForUser(event)
+  const groups = await getGroupsForCurrentUser(event)
   return groups.includes('SUPER_ADMIN') || groups.includes('USER_ADMIN')
+}
+
+export const formatUserAttributes = (user: UserType) => {
+  const userAttributes =
+    user.Attributes?.reduce(
+      (acc, attr) => {
+        if (attr.Name && attr.Value) {
+          acc[attr.Name] = attr.Value
+        }
+        return acc
+      },
+      {} as { [key: string]: string },
+    ) || {}
+
+  return {
+    Email: userAttributes.email,
+    EmailVerified: userAttributes.email_verified === 'true',
+    Nickname: userAttributes.nickname,
+    Name: userAttributes.name,
+    Username: user.Username,
+    Enabled: user.Enabled,
+    UserCreateDate: user.UserCreateDate,
+    UserLastModifiedDate: user.UserLastModifiedDate,
+    UserStatus: user.UserStatus,
+  }
 }
