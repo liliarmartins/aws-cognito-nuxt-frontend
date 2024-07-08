@@ -18,10 +18,11 @@ const {
   },
 })
 const isLoading = computed(() => status.value === 'pending')
-if (error.value) {
+
+if (error && error.value) {
   throw createError({
-    statusCode: error.value.statusCode,
-    message: error.value.message,
+    statusCode: error.value.data?.statusCode,
+    message: error.value.data?.message,
     fatal: true,
   })
 }
