@@ -11,15 +11,15 @@ export default defineEventHandler(async (event) => {
       )
 
       if (session.tokens === undefined) {
-        setResponseStatus(event, 403)
+        setResponseStatus(event, 401)
         return {
-          error: 'Access denied!',
+          error: 'Unauthorized.',
         }
       }
     } catch (error) {
-      setResponseStatus(event, 403)
+      setResponseStatus(event, 502)
       return {
-        error: 'Access denied: Amplify Auth Middleware failed',
+        error: 'Bad Gateway: Unable to Retrieve Amplify Session.',
       }
     }
   }

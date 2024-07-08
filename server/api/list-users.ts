@@ -36,10 +36,11 @@ const listUsers = async () => {
 
 export default defineEventHandler(async (event) => {
   if (!(await checkIfUserAdminUser(event))) {
-    setResponseStatus(event, 403)
-    return {
-      error: 'Access denied: You should be a User Admin to list users',
-    }
+    throw createError({
+      statusCode: 403,
+      message:
+        'Access Denied: User Admin privileges are required to list users.',
+    })
   }
 
   const users = await listUsers()
