@@ -1,10 +1,6 @@
 // https://docs.amplify.aws/vue/build-a-backend/server-side-rendering/
 import { Amplify } from 'aws-amplify'
-import {
-  fetchUserAttributes,
-  updateUserAttributes,
-  signOut,
-} from 'aws-amplify/auth'
+import { updateUserAttributes, signOut } from 'aws-amplify/auth'
 import outputs from '../amplify_outputs.json'
 
 export default defineNuxtPlugin({
@@ -24,7 +20,6 @@ export default defineNuxtPlugin({
         // `useNuxtApp().$Amplify.Auth.fetchAuthSession()`
         Amplify: {
           Auth: {
-            fetchUserAttributes,
             updateUserAttributes,
             signOut,
           },
