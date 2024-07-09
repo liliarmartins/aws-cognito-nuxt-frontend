@@ -6,7 +6,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
     const data = await $fetch('/api/current-user')
     if (data) return
   } catch (error) {
-    // await clearError()
     return navigateTo(`/login?redirectTo=${to.path}`)
   }
 })
