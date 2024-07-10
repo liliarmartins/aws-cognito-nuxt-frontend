@@ -9,16 +9,26 @@ watch(
   { immediate: true },
 )
 
+const isSuperAdmin = computed(
+  () => user.value && user.value.groups.includes('SUPER_ADMIN'),
+)
+
+const isUserAdmin = computed(
+  () => user.value && user.value.groups.includes('USER_ADMIN'),
+)
+
 const logout = async () => {
   await useNuxtApp().$Amplify.Auth.signOut()
   navigateTo('/login')
 }
 
 const hideNav = ref(true)
+const hideAdminDropdown = ref(true)
 const hideUserDropdown = ref(true)
 
 const hideAll = () => {
   hideNav.value = true
+  hideAdminDropdown.value = true
   hideUserDropdown.value = true
 }
 </script>
@@ -60,39 +70,68 @@ const hideAll = () => {
               <span>Home</span>
             </span>
           </NuxtLink>
+          <div
+            v-if="isSuperAdmin || isUserAdmin"
+            class="navbar-item has-dropdown"
+            :class="hideAdminDropdown || 'is-active'"
+            @mouseover="() => (hideAdminDropdown = false)"
+            @mouseout="() => (hideAdminDropdown = true)"
+          >
+            <a class="navbar-link">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fa fa-toggle-on"></i>
+                </span>
+                <span>Administration</span>
+              </span>
+            </a>
+            <div class="navbar-dropdown">
+              <NuxtLink
+                v-if="isSuperAdmin || isUserAdmin"
+                class="navbar-item"
+                to="/administration/users"
+                @click="hideAll"
+              >
+                <span class="icon-text">
+                  <span class="icon">
+                    <i class="fa fa-users"></i>
+                  </span>
+                  <span>Users</span>
+                </span>
+              </NuxtLink>
+            </div>
+          </div>
         </div>
         <div class="navbar-end">
           <div
+            v-if="user"
             class="navbar-item has-dropdown"
             :class="hideUserDropdown || 'is-active'"
             @mouseover="() => (hideUserDropdown = false)"
             @mouseout="() => (hideUserDropdown = true)"
           >
-            <ClientOnly>
-              <a class="navbar-link">
-                <span class="icon-text">
-                  <span class="icon">
-                    <font-awesome-icon :icon="['fas', 'user']" />
-                  </span>
-                  <span v-if="user && user.nickname">
-                    {{ user.nickname }}
-                  </span>
+            <a class="navbar-link">
+              <span class="icon-text">
+                <span class="icon">
+                  <font-awesome-icon :icon="['fas', 'user']" />
                 </span>
-              </a>
-            </ClientOnly>
+                <span v-if="user && user.nickname">
+                  {{ user.nickname }}
+                </span>
+              </span>
+            </a>
 
             <div class="navbar-dropdown is-right">
-              <ClientOnly>
-                <div class="navbar-item has-background-info-light">
-                  <p>
-                    Welcome
-                    <br />
-                    <span v-if="user && user.name">{{ user.name }}</span>
-                    <br />
-                    <span v-if="user && user.email">{{ user.email }}</span>
-                  </p>
-                </div>
-              </ClientOnly>
+              <div class="navbar-item has-background-info-light">
+                <p>
+                  Welcome
+                  <br />
+                  <span v-if="user && user.name">{{ user.name }}</span>
+                  <br />
+                  <span v-if="user && user.email">{{ user.email }}</span>
+                </p>
+              </div>
+
               <hr class="navbar-divider" />
               <NuxtLink
                 class="navbar-item"
