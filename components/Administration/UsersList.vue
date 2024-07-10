@@ -34,14 +34,14 @@ if (error && error.value) {
       <p class="panel-heading">
         {{ props.activeUsers ? 'Active' : 'All' }} Users
       </p>
-      <a v-for="user in users" :key="user.Username" class="panel-block">
+      <a v-for="user in users" :key="user.username" class="panel-block">
         <div>
           <p class="has-text-weight-bold is-size-6">
-            {{ user.Name }}
+            {{ user.name }}
           </p>
-          <p class="is-size-7">{{ user.Email }}</p>
+          <p class="is-size-7">{{ user.email }}</p>
           <p class="is-size-7">
-            <span v-for="(group, index) in user.Groups" :key="index">
+            <span v-for="(group, index) in user.groups" :key="index">
               <span v-if="index"> &bull; </span>{{ group }}
             </span>
           </p>

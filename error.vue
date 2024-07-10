@@ -34,7 +34,7 @@ const handleError = async (redirect: string) => {
                     <h1 class="title">404</h1>
                     <h2 class="subtitle">Resource not found</h2>
                   </div>
-                  <div v-if="error.statusCode == '403'">
+                  <div v-else-if="error.statusCode == '403'">
                     <h1 class="title">403</h1>
                     <h2 class="subtitle">Forbidden</h2>
                   </div>
