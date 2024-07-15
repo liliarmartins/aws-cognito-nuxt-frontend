@@ -7,7 +7,10 @@
         <div class="level-left"></div>
         <div class="level-right">
           <p class="level-item">
-            <NuxtLink to="/" class="button is-small is-success">
+            <NuxtLink
+              to="/administration/groups/new"
+              class="button is-small is-success"
+            >
               New Group
             </NuxtLink>
           </p>

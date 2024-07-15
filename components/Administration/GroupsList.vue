@@ -3,7 +3,7 @@ const {
   status,
   data: groups,
   error,
-} = await useFetch('/api/administration/list-groups')
+} = await useFetch('/api/administration/groups')
 const isLoading = computed(() => status.value === 'pending')
 
 if (error && error.value) {

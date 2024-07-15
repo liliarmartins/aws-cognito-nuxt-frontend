@@ -9,11 +9,11 @@ import { parseAmplifyConfig } from 'aws-amplify/utils'
 import outputs from '~/amplify_outputs.json'
 
 const amplifyConfig = parseAmplifyConfig(outputs)
+const client = new CognitoIdentityProviderClient({})
 
 export const getUserGroupsByUsername = async (
   username: string,
 ): Promise<string[]> => {
-  const client = new CognitoIdentityProviderClient({})
   const command = new AdminListGroupsForUserCommand({
     Username: username,
     UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
@@ -28,7 +28,6 @@ export const getUserGroupsByUsername = async (
 }
 
 const getUser = async (username: string) => {
-  const client = new CognitoIdentityProviderClient({})
   const command = new AdminGetUserCommand({
     Username: username,
     UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
@@ -72,7 +71,6 @@ const getDetailedUserByUsername = async (username: string) => {
 }
 
 export const listUsers = async () => {
-  const client = new CognitoIdentityProviderClient({})
   const command = new ListUsersCommand({
     UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
   })

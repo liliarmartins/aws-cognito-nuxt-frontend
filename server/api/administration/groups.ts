@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 403,
       message:
-        'Access Denied: Group Admin privileges are required to list users.',
+        'Access Denied: Group Admin privileges are required to list groups.',
     })
   }
 

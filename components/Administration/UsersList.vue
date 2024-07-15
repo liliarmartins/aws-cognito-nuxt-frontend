@@ -12,7 +12,7 @@ const {
   status,
   data: users,
   error,
-} = await useFetch('/api/administration/list-users', {
+} = await useFetch('/api/administration/users', {
   query: {
     isActive: isActive,
   },
