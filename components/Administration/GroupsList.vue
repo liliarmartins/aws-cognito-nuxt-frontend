@@ -1,5 +1,9 @@
 <script setup>
-const { status, data: groups, error } = await useFetch('/api/list-groups')
+const {
+  status,
+  data: groups,
+  error,
+} = await useFetch('/api/administration/list-groups')
 const isLoading = computed(() => status.value === 'pending')
 
 if (error && error.value) {
