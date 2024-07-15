@@ -14,7 +14,11 @@ const isSuperAdmin = computed(
 )
 
 const isUserAdmin = computed(
-  () => user.value && user.value.groups.includes('USER_ADMIN'),
+  () => user.value && user.value.groups.includes('USERS_ADMIN'),
+)
+
+const isGroupAdmin = computed(
+  () => user.value && user.value.groups.includes('USER_GROUPS_ADMIN'),
 )
 
 const logout = async () => {
@@ -97,6 +101,19 @@ const hideAll = () => {
                     <i class="fa fa-users"></i>
                   </span>
                   <span>Users</span>
+                </span>
+              </NuxtLink>
+              <NuxtLink
+                v-if="isSuperAdmin || isGroupAdmin"
+                class="navbar-item"
+                to="/administration/groups"
+                @click="hideAll"
+              >
+                <span class="icon-text">
+                  <span class="icon">
+                    <i class="fa fa-users"></i>
+                  </span>
+                  <span>Groups</span>
                 </span>
               </NuxtLink>
             </div>

@@ -50,5 +50,12 @@ export const checkIfAuthUserIsUserAdmin = async (
   event: H3Event<EventHandlerRequest>,
 ): Promise<boolean> => {
   const groups = await getAuthUserGroups(event)
-  return groups.includes('SUPER_ADMIN') || groups.includes('USER_ADMIN')
+  return groups.includes('SUPER_ADMIN') || groups.includes('USERS_ADMIN')
+}
+
+export const checkIfAuthUserIsGroupAdmin = async (
+  event: H3Event<EventHandlerRequest>,
+): Promise<boolean> => {
+  const groups = await getAuthUserGroups(event)
+  return groups.includes('SUPER_ADMIN') || groups.includes('USER_GROUPS_ADMIN')
 }
