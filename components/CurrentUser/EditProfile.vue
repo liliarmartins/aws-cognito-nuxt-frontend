@@ -1,79 +1,47 @@
-<script setup>
+<script lang="ts" setup>
 const props = defineProps({
-  name: {
-    type: String,
-    default: '',
-  },
-  nickname: {
-    type: String,
-    default: '',
+  user: {
+    type: Object,
+    default: null,
   },
 })
 
-const name = ref(props.name)
-const nickname = ref(props.nickname)
-const nameInputError = ref(false)
-const nicknameInputError = ref(false)
-const emit = defineEmits(['save', 'cancel'])
+const user = ref(props.user)
+const isLoading = ref(false)
+const toastStore = useToastStore()
+const { showToast } = toastStore
 
-const save = () => {
-  nameInputError.value = !name.value
-  nicknameInputError.value = !nickname.value
+const save = async (name: string, nickname: string) => {
+  isLoading.value = true
+  try {
+    await useNuxtApp().$Amplify.Auth.updateUserAttributes({
+      userAttributes: {
+        name,
+        nickname,
+      },
+    })
 
-  if (nameInputError.value || nicknameInputError.value) {
-    return
+    useUpdateUserStore()
+    showToast('Profile updated successfully!', 'is-success')
+  } catch (error) {
+    showToast('Failed to update profile', 'is-danger')
+  } finally {
+    isLoading.value = false
+    navigateTo('/')
   }
-
-  emit('save', name.value, nickname.value)
 }
 </script>
 
 <template>
-  <div>
-    <div>
-      <div class="field">
-        <label class="label">Name</label>
-        <div class="control">
-          <input
-            v-model.trim="name"
-            class="input"
-            type="text"
-            placeholder="Full name"
-            required
-          />
-        </div>
-        <p v-if="nameInputError" class="help is-danger">
-          This field cannot be blank
-        </p>
-      </div>
-      <div class="field">
-        <label class="label">Nickname</label>
-        <div class="control">
-          <input
-            v-model.trim="nickname"
-            class="input"
-            type="text"
-            placeholder="Nickname"
-            required
-          />
-          <p v-if="nicknameInputError" class="help is-danger">
-            This field cannot be blank
-          </p>
-        </div>
-      </div>
-      <div class="field is-grouped mt-5">
-        <div class="control">
-          <button class="button is-info" @click="save">Save</button>
-        </div>
-        <div class="control">
-          <button
-            class="button is-info is-light"
-            @click="() => $emit('cancel')"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
+  <div v-if="user">
+    <CurrentUserProfileForm
+      :name="user.name"
+      :nickname="user.nickname"
+      @save="save"
+      @cancel="() => navigateTo('/')"
+    />
+    <LoadingSpinner v-if="isLoading" />
   </div>
 </template>
+
+<style scoped></style>

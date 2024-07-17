@@ -1,13 +1,12 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div>
-    <div class="container">
-      <div class="box">
-        <div class="columns is-centered">
-          <div class="column">
-            <AdministrationNewGroup />
-          </div>
+  <div class="container">
+    <div class="box">
+      <div class="columns">
+        <div class="column is-5-tablet is-6-desktop is-6-widescreen">
+          <h4 class="title is-4">New Group</h4>
+          <AdministrationNewGroup />
         </div>
       </div>
     </div>
