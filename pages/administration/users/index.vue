@@ -28,7 +28,10 @@ const activeUsers = ref(true)
         </div>
         <div class="level-right">
           <p class="level-item">
-            <NuxtLink to="/" class="button is-small is-success">
+            <NuxtLink
+              to="/administration/users/new"
+              class="button is-small is-success"
+            >
               New User
             </NuxtLink>
           </p>

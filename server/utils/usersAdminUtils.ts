@@ -1,5 +1,6 @@
 import type { AdminGetUserCommandOutput } from '@aws-sdk/client-cognito-identity-provider'
 import {
+  AdminCreateUserCommand,
   AdminGetUserCommand,
   AdminListGroupsForUserCommand,
   CognitoIdentityProviderClient,
@@ -84,4 +85,31 @@ export const listUsers = async () => {
       return await getDetailedUserByUsername(user.Username)
     }),
   )
+}
+
+export const createUser = async (
+  email: string,
+  name: string,
+  nickname: string,
+) => {
+  const command = new AdminCreateUserCommand({
+    DesiredDeliveryMediums: ['EMAIL'],
+    UserAttributes: [
+      {
+        Name: 'email',
+        Value: email,
+      },
+      {
+        Name: 'name',
+        Value: name,
+      },
+      {
+        Name: 'nickname',
+        Value: nickname,
+      },
+    ],
+    UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
+    Username: email,
+  })
+  return await client.send(command)
 }
