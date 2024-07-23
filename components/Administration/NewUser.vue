@@ -30,7 +30,7 @@ const save = async (email, name, nickname) => {
 <template>
   <div class="columns">
     <div class="column">
-      <AdministrationUserForm @save="save" />
+      <AdministrationNewUserForm @save="save" />
     </div>
     <LoadingSpinner v-if="isLoading" />
   </div>

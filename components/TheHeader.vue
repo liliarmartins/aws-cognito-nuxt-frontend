@@ -84,7 +84,7 @@ const hideAll = () => {
             <a class="navbar-link">
               <span class="icon-text">
                 <span class="icon">
-                  <i class="fa fa-toggle-on"></i>
+                  <font-awesome-icon :icon="['fas', 'screwdriver-wrench']" />
                 </span>
                 <span>Administration</span>
               </span>
