@@ -34,7 +34,12 @@ if (error && error.value) {
       <p class="panel-heading">
         {{ props.activeUsers ? 'Active' : 'All' }} Users
       </p>
-      <a v-for="user in users" :key="user.username" class="panel-block">
+      <NuxtLink
+        v-for="user in users"
+        :key="user.username"
+        class="panel-block"
+        :to="'/administration/users/' + user.username"
+      >
         <div>
           <p class="has-text-weight-bold is-size-6">
             {{ user.name }}
@@ -46,7 +51,7 @@ if (error && error.value) {
             </span>
           </p>
         </div>
-      </a>
+      </NuxtLink>
     </nav>
     <LoadingSpinner v-if="isLoading" />
   </div>

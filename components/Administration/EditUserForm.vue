@@ -16,12 +16,13 @@ const enabled = ref(props.user.enabled)
 const groups = ref(props.user.groups)
 const { status, data } = await useFetch('/api/administration/groups')
 const isLoading = computed(() => status.value === 'pending')
-const availableGroups = data.value
-  ?.map((group) => group.GroupName)
-  .filter((group) => {
-    // remove undefined elements and groups in user.groups
-    return group !== undefined && props.user.groups.indexOf(group) < 0
-  })
+const availableGroups =
+  data.value
+    ?.map((group) => group.GroupName)
+    // remove undefined elements
+    .filter((group) => group !== undefined)
+    // remove groups in user.groups
+    .filter((group) => props.user.groups!.indexOf(group) < 0) || []
 
 const emit = defineEmits(['save'])
 
@@ -122,7 +123,10 @@ const save = () => {
         <button class="button is-info" @click="save">Save</button>
       </div>
       <div class="control">
-        <button class="button is-info is-light" @click="() => navigateTo('/')">
+        <button
+          class="button is-info is-light"
+          @click="() => navigateTo('/administration/users')"
+        >
           Cancel
         </button>
       </div>

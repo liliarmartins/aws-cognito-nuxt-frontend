@@ -50,7 +50,7 @@ const flattenUserAttributes = (user: AdminGetUserCommandOutput) => {
   )
 }
 
-const getDetailedUserByUsername = async (username: string) => {
+export const getDetailedUserByUsername = async (username: string) => {
   const user = await getUser(username)
   const attributes = flattenUserAttributes(user)
   const groups = await getUserGroupsByUsername(username)

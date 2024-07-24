@@ -15,9 +15,9 @@ declare global {
   interface DetailedUser extends UserWithGroups {
     emailVerified?: boolean
     enabled?: boolean
-    createDate?: Date
-    lastModifiedDate?: Date
-    status?: UserStatusType
+    createDate?: Date | string
+    lastModifiedDate?: Date | string
+    status?: UserStatusType | string
   }
 }
 
