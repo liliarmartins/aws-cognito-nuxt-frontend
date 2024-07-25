@@ -5,6 +5,7 @@ const props = defineProps({
     required: true,
   },
 })
+
 const email = ref(props.user.email)
 const emailInputFormatError = ref(false)
 const emailInputBlankError = ref(false)
@@ -55,13 +56,13 @@ const save = () => {
 
 <template>
   <div>
+    <AdministrationUserDetails :user="user" />
     <div class="field">
       <label class="checkbox">
         <input v-model="enabled" type="checkbox" />
         Is enabled?
       </label>
     </div>
-
     <div class="field">
       <label class="label">Email</label>
       <div class="control">
