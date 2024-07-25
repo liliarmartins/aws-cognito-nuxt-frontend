@@ -3,6 +3,7 @@ import {
   AdminCreateUserCommand,
   AdminGetUserCommand,
   AdminListGroupsForUserCommand,
+  AdminUpdateUserAttributesCommand,
   CognitoIdentityProviderClient,
   ListUsersCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
@@ -107,9 +108,63 @@ export const createUser = async (
         Name: 'nickname',
         Value: nickname,
       },
+      {
+        Name: 'email_verified',
+        Value: 'true',
+      },
     ],
     UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
     Username: email,
   })
   return await client.send(command)
+}
+
+const updateUserAttributes = async (
+  email: string,
+  name: string,
+  nickname: string,
+) => {
+  const updateAttributesCommand = new AdminUpdateUserAttributesCommand({
+    UserAttributes: [
+      {
+        Name: 'email',
+        Value: email,
+      },
+      {
+        Name: 'name',
+        Value: name,
+      },
+      {
+        Name: 'nickname',
+        Value: nickname,
+      },
+      {
+        Name: 'email_verified',
+        Value: 'true',
+      },
+    ],
+    UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
+    Username: email,
+  })
+  return await client.send(updateAttributesCommand)
+}
+
+export const updateUser = async (
+  username: string,
+  email: string,
+  name: string,
+  nickname: string,
+  enabled: boolean,
+  groups: string[],
+) => {
+  const userBefore = await getDetailedUserByUsername(username)
+  if (
+    userBefore.email !== email ||
+    userBefore.name !== name ||
+    userBefore.nickname !== nickname
+  ) {
+    await updateUserAttributes(email, name, nickname)
+  }
+
+  // TODO update enabled and groups
 }
