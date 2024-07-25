@@ -56,7 +56,9 @@ const save = () => {
 
 <template>
   <div>
-    <AdministrationUserDetails :user="user" />
+    <div class="field">
+      <AdministrationUserDetails :user="user" />
+    </div>
     <div class="field">
       <label class="checkbox">
         <input v-model="enabled" type="checkbox" />

@@ -16,7 +16,7 @@ const formatDate = (date: string | Date | undefined) => {
 </script>
 
 <template>
-  <div class="field">
+  <div>
     <button
       v-if="seeMore"
       class="button is-small is-rounded"
