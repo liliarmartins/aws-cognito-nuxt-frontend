@@ -1,5 +1,4 @@
 import { getErrorStatusCode } from '~/server/utils/handleErrorUtils'
-import { getDetailedUserByUsername } from '~/server/utils/usersAdminUtils'
 
 export default defineEventHandler(async (event): Promise<DetailedUser> => {
   if (!(await checkIfAuthUserIsUserAdmin(event))) {
@@ -35,8 +34,7 @@ export default defineEventHandler(async (event): Promise<DetailedUser> => {
   }
 
   try {
-    const userBefore = await getDetailedUserByUsername(username)
-    return userBefore
+    return updateUser(username, email, name, nickname, enabled, groups)
   } catch (error) {
     throw createError({
       statusCode: getErrorStatusCode(error),

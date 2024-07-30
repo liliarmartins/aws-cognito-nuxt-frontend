@@ -1,8 +1,12 @@
 import type { AdminGetUserCommandOutput } from '@aws-sdk/client-cognito-identity-provider'
 import {
+  AdminAddUserToGroupCommand,
   AdminCreateUserCommand,
+  AdminEnableUserCommand,
+  AdminDisableUserCommand,
   AdminGetUserCommand,
   AdminListGroupsForUserCommand,
+  AdminRemoveUserFromGroupCommand,
   AdminUpdateUserAttributesCommand,
   CognitoIdentityProviderClient,
   ListUsersCommand,
@@ -72,20 +76,23 @@ export const getDetailedUserByUsername = async (username: string) => {
   return detailedUser
 }
 
-export const listUsers = async () => {
+export const listUsers = async (): Promise<DetailedUser[]> => {
   const command = new ListUsersCommand({
     UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
   })
   const data = await client.send(command)
 
-  return await Promise.all(
-    data.Users!.map(async (user) => {
-      if (!user.Username) {
-        return
-      }
-      return await getDetailedUserByUsername(user.Username)
-    }),
-  )
+  if (!data.Users) return []
+
+  const usersPromises = data.Users.map((user) => {
+    if (!user.Username) {
+      return undefined
+    }
+    return getDetailedUserByUsername(user.Username)
+  })
+
+  const users = await Promise.all(usersPromises)
+  return users.filter((user): user is DetailedUser => user !== undefined)
 }
 
 export const createUser = async (
@@ -116,7 +123,7 @@ export const createUser = async (
     UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
     Username: email,
   })
-  return await client.send(command)
+  return client.send(command)
 }
 
 const updateUserAttributes = async (
@@ -146,7 +153,55 @@ const updateUserAttributes = async (
     UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
     Username: email,
   })
-  return await client.send(updateAttributesCommand)
+  return client.send(updateAttributesCommand)
+}
+
+const enableUser = async (username: string) => {
+  const command = new AdminEnableUserCommand({
+    UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
+    Username: username,
+  })
+  return client.send(command)
+}
+
+const disableUser = async (username: string) => {
+  const command = new AdminDisableUserCommand({
+    UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
+    Username: username,
+  })
+  return client.send(command)
+}
+
+const addUserToGroup = async (username: string, group: string) => {
+  const command = new AdminAddUserToGroupCommand({
+    UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
+    Username: username,
+    GroupName: group,
+  })
+  return client.send(command)
+}
+
+const removeUserFromGroup = async (username: string, group: string) => {
+  const command = new AdminRemoveUserFromGroupCommand({
+    UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
+    Username: username,
+    GroupName: group,
+  })
+  return client.send(command)
+}
+
+const updateGroups = async (
+  username: string,
+  groupsBefore: string[],
+  groupsNew: string[],
+) => {
+  groupsNew.forEach((group) => {
+    if (!groupsBefore.includes(group)) addUserToGroup(username, group)
+  })
+
+  groupsBefore.forEach((group) => {
+    if (!groupsNew.includes(group)) removeUserFromGroup(username, group)
+  })
 }
 
 export const updateUser = async (
@@ -166,5 +221,15 @@ export const updateUser = async (
     await updateUserAttributes(email, name, nickname)
   }
 
-  // TODO update enabled and groups
+  await updateGroups(username, userBefore.groups ?? [], groups)
+
+  if (!userBefore.enabled && enabled) {
+    await enableUser(username)
+  }
+
+  if (userBefore.enabled && !enabled) {
+    await disableUser(username)
+  }
+
+  return getDetailedUserByUsername(username)
 }

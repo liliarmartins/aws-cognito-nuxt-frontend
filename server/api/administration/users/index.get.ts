@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 
   const isActive = getQuery(event).isActive === 'true'
   if (isActive) {
-    return users.filter((user) => user?.enabled)
+    return users.filter((user) => user.enabled)
   }
 
   return users
