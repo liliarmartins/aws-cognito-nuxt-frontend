@@ -17,6 +17,7 @@ export const useSaveUser = (username: string) => {
         body: { email, name, nickname, enabled, groups },
       })
       showToast('User saved successfully!', 'is-success')
+      useUpdateUserStore()
       navigateTo('/administration/users')
       return { data }
     } catch (error) {

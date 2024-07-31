@@ -5,7 +5,7 @@ export default defineEventHandler(async (event): Promise<DetailedUser> => {
     throw createError({
       statusCode: 403,
       message:
-        "Access Denied: User Admin privileges are required to get a user's detail.",
+        'Access Denied: User Admin privileges are required to edit a user.',
     })
   }
 

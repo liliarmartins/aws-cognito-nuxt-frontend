@@ -127,6 +127,7 @@ export const createUser = async (
 }
 
 const updateUserAttributes = async (
+  username: string,
   email: string,
   name: string,
   nickname: string,
@@ -151,7 +152,7 @@ const updateUserAttributes = async (
       },
     ],
     UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
-    Username: email,
+    Username: username,
   })
   return client.send(updateAttributesCommand)
 }
@@ -218,7 +219,7 @@ export const updateUser = async (
     userBefore.name !== name ||
     userBefore.nickname !== nickname
   ) {
-    await updateUserAttributes(email, name, nickname)
+    await updateUserAttributes(username, email, name, nickname)
   }
 
   await updateGroups(username, userBefore.groups ?? [], groups)
