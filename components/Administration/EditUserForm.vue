@@ -14,16 +14,12 @@ const nameInputError = ref(false)
 const nickname = ref(props.user.nickname)
 const nicknameInputError = ref(false)
 const enabled = ref(props.user.enabled)
+const { groups: allGroups, isLoading } = await useFetchGroupsList()
 const groups = ref(props.user.groups)
-const { status, data } = await useFetch('/api/administration/groups')
-const isLoading = computed(() => status.value === 'pending')
-const availableGroups =
-  data.value
-    ?.map((group) => group.GroupName)
-    // remove undefined elements
-    .filter((group) => group !== undefined)
-    // remove groups in user.groups
-    .filter((group) => props.user.groups!.indexOf(group) < 0) || []
+// remove groups in user.groups
+const availableGroups = allGroups.value.filter(
+  (group) => props.user.groups!.indexOf(group) < 0,
+)
 
 const emit = defineEmits(['save'])
 

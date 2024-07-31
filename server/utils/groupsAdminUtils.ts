@@ -17,8 +17,12 @@ export const listGroups = async () => {
 
   if (!data.Groups) return []
 
-  return data.Groups.map(
-    (group: { GroupName?: string }) => group.GroupName || '',
+  return (
+    data.Groups
+      // get array of group names (string)
+      .map((group) => group.GroupName)
+      // remove undefined elements
+      .filter((group) => group !== undefined)
   )
 }
 
