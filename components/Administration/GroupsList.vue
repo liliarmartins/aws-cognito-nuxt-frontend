@@ -1,28 +1,15 @@
 <script setup>
-const {
-  status,
-  data: groups,
-  error,
-} = await useFetch('/api/administration/groups')
-const isLoading = computed(() => status.value === 'pending')
-
-if (error && error.value) {
-  throw createError({
-    statusCode: error.value.data?.statusCode,
-    message: error.value.data?.message,
-    fatal: true,
-  })
-}
+const { groups, isLoading } = await useFetchGroupsList()
 </script>
 
 <template>
   <div>
     <nav class="panel">
       <p class="panel-heading">Groups</p>
-      <a v-for="group in groups" :key="group.GroupName" class="panel-block">
+      <a v-for="(group, index) in groups" :key="index" class="panel-block">
         <div>
           <p class="has-text-weight-bold is-size-6">
-            {{ group.GroupName }}
+            {{ group }}
           </p>
         </div>
       </a>

@@ -7,5 +7,5 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return await listGroups()
+  return listGroups()
 })

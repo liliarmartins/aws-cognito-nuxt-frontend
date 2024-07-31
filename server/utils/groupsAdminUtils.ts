@@ -15,7 +15,11 @@ export const listGroups = async () => {
   })
   const data = await client.send(command)
 
-  return data.Groups
+  if (!data.Groups) return []
+
+  return data.Groups.map(
+    (group: { GroupName?: string }) => group.GroupName || '',
+  )
 }
 
 export const createGroup = async (groupName: string) => {
