@@ -75,7 +75,7 @@ const hideAll = () => {
             </span>
           </NuxtLink>
           <div
-            v-if="isSuperAdmin || isUserAdmin"
+            v-if="isSuperAdmin || isUserAdmin || isGroupAdmin"
             class="navbar-item has-dropdown"
             :class="hideAdminDropdown || 'is-active'"
             @mouseover="() => (hideAdminDropdown = false)"
@@ -98,7 +98,7 @@ const hideAll = () => {
               >
                 <span class="icon-text">
                   <span class="icon">
-                    <i class="fa fa-users"></i>
+                    <font-awesome-icon :icon="['fas', 'users']" />
                   </span>
                   <span>Users</span>
                 </span>
@@ -111,7 +111,7 @@ const hideAll = () => {
               >
                 <span class="icon-text">
                   <span class="icon">
-                    <i class="fa fa-users"></i>
+                    <font-awesome-icon :icon="['fas', 'users-rectangle']" />
                   </span>
                   <span>Groups</span>
                 </span>
