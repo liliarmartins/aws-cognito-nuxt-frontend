@@ -6,26 +6,18 @@ const props = defineProps({
   },
 })
 
-const isActive = computed(() => props.activeUsers)
+const users = ref([])
 
-const {
-  status,
-  data: users,
-  error,
-} = await useFetch('/api/administration/users', {
-  query: {
-    isActive: isActive,
+const { fetchUsers, isLoading } = useFetchUsersList()
+
+users.value = await fetchUsers(props.activeUsers)
+
+watch(
+  () => props.activeUsers,
+  async () => {
+    users.value = await fetchUsers(props.activeUsers)
   },
-})
-const isLoading = computed(() => status.value === 'pending')
-
-if (error && error.value) {
-  throw createError({
-    statusCode: error.value.data?.statusCode,
-    message: error.value.data?.message,
-    fatal: true,
-  })
-}
+)
 </script>
 
 <template>
