@@ -7,6 +7,7 @@ import {
   AdminGetUserCommand,
   AdminListGroupsForUserCommand,
   AdminRemoveUserFromGroupCommand,
+  AdminResetUserPasswordCommand,
   AdminUpdateUserAttributesCommand,
   CognitoIdentityProviderClient,
   ListUsersCommand,
@@ -233,4 +234,12 @@ export const updateUser = async (
   }
 
   return getDetailedUserByUsername(username)
+}
+
+export const resetUserPassword = async (username: string) => {
+  const command = new AdminResetUserPasswordCommand({
+    UserPoolId: amplifyConfig.Auth?.Cognito.userPoolId,
+    Username: username,
+  })
+  return client.send(command)
 }

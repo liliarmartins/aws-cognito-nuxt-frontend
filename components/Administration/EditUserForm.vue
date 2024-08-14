@@ -21,7 +21,7 @@ const availableGroups = allGroups.value.filter(
   (group) => props.user.groups!.indexOf(group) < 0,
 )
 
-const emit = defineEmits(['save'])
+const emit = defineEmits(['save', 'reset'])
 
 const save = () => {
   const mailFormat = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
@@ -52,6 +52,16 @@ const save = () => {
 
 <template>
   <div>
+    <div class="field">
+      <div class="control">
+        <button
+          class="button is-small is-rounded is-success"
+          @click="() => $emit('reset')"
+        >
+          Reset User Password
+        </button>
+      </div>
+    </div>
     <div class="field">
       <AdministrationUserDetails :user="user" />
     </div>

@@ -1,6 +1,3 @@
-import { getErrorStatusCode } from '~/server/utils/handleErrorUtils'
-import { getDetailedUserByUsername } from '~/server/utils/usersAdminUtils'
-
 export default defineEventHandler(async (event): Promise<DetailedUser> => {
   if (!(await checkIfAuthUserIsUserAdmin(event))) {
     throw createError({

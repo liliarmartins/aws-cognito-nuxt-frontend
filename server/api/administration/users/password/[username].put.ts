@@ -16,23 +16,9 @@ export default defineEventHandler(async (event): Promise<DetailedUser> => {
     })
   }
 
-  const body = await readBody<{
-    email: string
-    name: string
-    nickname: string
-    enabled: boolean
-    groups: string[]
-  }>(event)
-  const { email, name, nickname, enabled, groups } = body
-  if (!email || !name || !nickname) {
-    throw createError({
-      statusCode: 400,
-      message: 'Email, name and nickname are required',
-    })
-  }
-
   try {
-    return updateUser(username, email, name, nickname, enabled, groups)
+    resetUserPassword(username)
+    return getDetailedUserByUsername(username)
   } catch (error) {
     throw createError({
       statusCode: getErrorStatusCode(error),
