@@ -1,5 +1,9 @@
 export const useUpdateUserStore = async () => {
-  const user = await useNuxtApp().$Amplify.Auth.fetchUserAttributes()
   const userStore = useUserStore()
-  userStore.setUser(user)
+  try {
+    const user = await $fetch('/api/current-user')
+    userStore.setUser(user)
+  } catch (error) {
+    userStore.setUser(null)
+  }
 }
