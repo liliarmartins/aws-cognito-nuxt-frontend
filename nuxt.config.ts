@@ -11,9 +11,5 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     ['@pinia/nuxt', { autoImports: ['defineStore', 'acceptHMRUpdate'] }],
   ],
-  plugins: [
-    '~/plugins/01.amplify-apis.client.ts',
-    '~/plugins/02.auth-redirect.ts',
-    '~/plugins/fontawesome.ts',
-  ],
+  plugins: ['~/plugins/01.amplifyApis.client.ts', '~/plugins/fontawesome.ts'],
 })
